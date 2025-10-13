@@ -304,16 +304,62 @@ function handleSearchInput() {
   if (filter.length > 0) {
     searchCancelButton.classList.remove("hidden");
   } else searchCancelButton.classList.add("hidden");
+  
+  let resultsFound = 0;
+  
   if (filter === "") {
     for (i = 0; i < gameArray.length; i++) {
       createAndPushGameToList(gameArray[i]);
+      resultsFound++;
     }
   } else {
     for (i = 0; i < gameArray.length; i++) {
       if (gameArray[i].name.toUpperCase().includes(filter) === true) {
         createAndPushGameToList(gameArray[i]);
+      resultsFound++;
       }
     }
+  }
+  
+  // Show empty state if no results found
+  if (resultsFound === 0) {
+    const emptyStateDiv = document.createElement("div");
+    emptyStateDiv.classList.add(
+      "flex",
+      "flex-col",
+      "items-center",
+      "justify-center",
+      "h-full",
+      "text-center",
+      "p-8"
+    );
+    
+    const sadIcon = document.createElement("div");
+    sadIcon.classList.add("text-6xl", "mb-4");
+    sadIcon.textContent = "😞";
+    
+    const messageTitle = document.createElement("p");
+    messageTitle.classList.add(
+      "text-lg",
+      "font-semibold",
+      "text-slate-700",
+      "dark:text-slate-100",
+      "mb-2"
+    );
+    messageTitle.textContent = "No games found";
+    
+    const messageSubtitle = document.createElement("p");
+    messageSubtitle.classList.add(
+      "text-sm",
+      "text-slate-600",
+      "dark:text-slate-400"
+    );
+    messageSubtitle.textContent = "Try adjusting your search terms";
+    
+    emptyStateDiv.appendChild(sadIcon);
+    emptyStateDiv.appendChild(messageTitle);
+    emptyStateDiv.appendChild(messageSubtitle);
+    gameListDiv.appendChild(emptyStateDiv);
   }
 }
 searchCancelButton.addEventListener("click", function () {
@@ -401,3 +447,4 @@ localStorage.setItem(
   "root-url",
   removeTrailingSlash(window.location.href.split("#")[0].split("index.html")[0])
 );
+        resultsFound++;

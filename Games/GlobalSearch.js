@@ -467,6 +467,61 @@ async function handleGlobalSearch() {
   await handleEnums();
   searchSpinner.classList.add("hidden");
   globalSearchFoundDiv.classList.remove("hidden");
+  
+  // Check if any results were found
+  const resultParagraphs = globalSearchFoundDiv.querySelectorAll("p.font-semibold.text-xl");
+  let totalResults = 0;
+  resultParagraphs.forEach(p => {
+    const match = p.textContent.match(/found: (\d+)/);
+    if (match) {
+      totalResults += parseInt(match[1]);
+    }
+  });
+  
+  // Show empty state if no results found
+  if (totalResults === 0) {
+    while (globalSearchFoundDiv.firstChild) {
+      globalSearchFoundDiv.removeChild(globalSearchFoundDiv.firstChild);
+    }
+    
+    const emptyStateDiv = document.createElement("div");
+    emptyStateDiv.classList.add(
+      "flex",
+      "flex-col",
+      "items-center",
+      "justify-center",
+      "h-full",
+      "text-center",
+      "p-8"
+    );
+    
+    const sadIcon = document.createElement("div");
+    sadIcon.classList.add("text-6xl", "mb-4");
+    sadIcon.textContent = "😞";
+    
+    const messageTitle = document.createElement("p");
+    messageTitle.classList.add(
+      "text-lg",
+      "font-semibold",
+      "text-slate-900",
+      "dark:text-slate-100",
+      "mb-2"
+    );
+    messageTitle.textContent = "No results found";
+    
+    const messageSubtitle = document.createElement("p");
+    messageSubtitle.classList.add(
+      "text-sm",
+      "text-slate-600",
+      "dark:text-slate-500"
+    );
+    messageSubtitle.textContent = "Try different search terms or select different types";
+    
+    emptyStateDiv.appendChild(sadIcon);
+    emptyStateDiv.appendChild(messageTitle);
+    emptyStateDiv.appendChild(messageSubtitle);
+    globalSearchFoundDiv.appendChild(emptyStateDiv);
+  }
 }
 
 function handleGlobalSearchInput(event) {
